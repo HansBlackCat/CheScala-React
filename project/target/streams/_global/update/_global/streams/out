@@ -1,0 +1,4 @@
+[debug] "not up to date. inChanged = true, force = false
+[debug] Updating ProjectRef(uri("file:/Users/hansblackcat/Documents/Git/chescala-react/project/"), "chescala-react-build")...
+[debug] Done updating ProjectRef(uri("file:/Users/hansblackcat/Documents/Git/chescala-react/project/"), "chescala-react-build")
+[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.

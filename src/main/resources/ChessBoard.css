@@ -1,0 +1,16 @@
+.Head-title {
+    font: italic;
+    text-align: center;
+}
+
+.Head {
+    font-size: larger;
+    font-weight: 200;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: blueviolet;
+}
+
+header {
+    font-size: larger;
+    font-family: fantasy;
+}
