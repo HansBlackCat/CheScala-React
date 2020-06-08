@@ -14,3 +14,38 @@ header {
     font-size: larger;
     font-family: fantasy;
 }
+
+.square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+}
+  
+.square:focus {
+    outline: none;
+}
+
+.Board-Row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.ChessBoard-Total-Render {
+    margin: 50px 50px 50px 50px;
+    border: 10px solid #4CAF50;
+    padding: 10px 10px 10px 10px;
+}
+
+.Total-Board {
+    border: 5px solid gray;
+}
