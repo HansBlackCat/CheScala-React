@@ -14,6 +14,8 @@ class BoardAction extends Root with PGN {
     // (whiteAction, blackAction)
     private[this] var historyMoveText = ListBuffer[(String,String)]()
 
+    private[this] var isWhite = true
+
     // TODO make this to case class
     private[this] var moveTextBuffer = "" // also check white, black .isEmpty
 
@@ -23,10 +25,12 @@ class BoardAction extends Root with PGN {
             case "test1" => testGrid1
             case "test2" => testGrid2
             case "test3" => testGrid3
+            case "test4" => testGrid4
             case _       => baseMapHash
         }
         currentPieceRule = PieceRule(currentBoard)
         historyMoveText = ListBuffer[(String,String)]()
+        isWhite = true
         moveTextBuffer = ""
     }
 
@@ -71,6 +75,8 @@ class BoardAction extends Root with PGN {
         println(historyMoveText)
     }
 
+    def boardisWhite = isWhite
+
     def actWithMoveTest(ipt: String) = {
         // act sth
         moveTextBuffer match {
@@ -81,10 +87,6 @@ class BoardAction extends Root with PGN {
         }
 
     }
-
-
-
-
 
     def toUni(ipt: Info) = {
             ipt match {
@@ -108,6 +110,60 @@ class BoardAction extends Root with PGN {
                         case Pawn => "\u265F"
                     }
             }
+    }
+
+    def act(from: String, to: String) = {
+        println("called")
+        if (isWhite) {
+        println("isWhite")
+            val possibleRangeMMap = PieceRule(currentBoard, isWhite)
+            if (possibleRangeMMap.keys.toIndexedSeq contains from) {
+        println("possiblefrom")
+                val toPossibleArr = possibleRangeMMap(from).map(_.location)
+                if (toPossibleArr contains to) {
+        println("toPossibleArr")
+                    if ((currentBoard(from) match {
+                        case InfoWhite(kind, true) if kind == Pawn => true
+                        case InfoBlack(_, _) => throw new Exception("Why you here?")
+                        case _ => false
+                    }) && 
+                        ExLocation(from).forpawnDoubleMoveCheckFromTo(to)
+                    ){
+        println("PawnDouble")
+                        val tmpInfo = currentBoard(from)
+                        val dontRef = currentBoard remove from
+                        currentBoard(to) = tmpInfo
+                    }
+                    val tmpInfo = (currentBoard(from))
+        println("called")
+                    val dontRef = currentBoard remove from
+        println("called")
+                    currentBoard(to) = infoCloneWithNotInit(tmpInfo)
+        println("called")
+                }
+            }
+        } else {
+            val possibleRangeMMap = PieceRule(currentBoard, !isWhite)
+            if (possibleRangeMMap.keys.toIndexedSeq contains from) {
+                val toPossibleArr = possibleRangeMMap(from).map(_.location)
+                if (toPossibleArr contains to) {
+                    if ((currentBoard(from) match {
+                        case InfoBlack(kind, true) if kind == Pawn => true
+                        case InfoWhite(_, _) => throw new Exception("Why you here?")
+                        case _ => false
+                    }) && 
+                        ExLocation(from).forpawnDoubleMoveCheckFromTo(to)
+                    ){
+                        val tmpInfo = currentBoard(from)
+                        val dontRef = currentBoard remove from
+                        currentBoard(to) = tmpInfo
+                    }
+                    val tmpInfo = (currentBoard(from))
+                    val dontRef = currentBoard remove from
+                    currentBoard(to) = infoCloneWithNotInit(tmpInfo)
+                }
+            }
+        }
     }
 
 
@@ -189,11 +245,6 @@ class BoardAction extends Root with PGN {
         CurrentMoveText(ipt, isTurn, whats, whos, wheres)
     }
 
-
-    def checkAvail() = {}
-    def action() = {
-
-    }
 
     // For debug printing
     def debugPrintBoard = {

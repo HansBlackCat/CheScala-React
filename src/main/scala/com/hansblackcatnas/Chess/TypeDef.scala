@@ -1,4 +1,5 @@
 package com.hansblackcat.Chess
+import scala.math._
 
 trait Location
 case object NoneLocation extends Location
@@ -7,6 +8,11 @@ case class ExLocation(location: String) extends Location {
     val toArrLoc = Array(a(0) - 97, a(1) - 49)
     def toStrLoc(toArrLoc: Array[Int]): String = (toArrLoc(0)+97).toChar.toString ++ (toArrLoc(1)+1).toString
     require(a.length < 3 && 0 <= toArrLoc(0) && toArrLoc(0) < 8 && 0 <= toArrLoc(1) && toArrLoc(1) < 8)
+
+    def forpawnDoubleMoveCheckFromTo(ipt: String) = {
+        if (abs(this.location.tail.toInt - ipt.tail.toInt) == 2) true
+        else false
+    }
 
     def + (ipt: Array[Int]): ExLocation = {
         require(ipt.length < 3)

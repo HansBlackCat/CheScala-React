@@ -13,7 +13,7 @@ import slinky.core.facade.ReactElement
 import scala.scalajs.js.annotation.JSExportTopLevel
 import org.scalajs.dom.css
 import com.hansblackcat.Chess._
-import scala.collection.mutable.{Map => MMap}
+import scala.collection.mutable.{Map => MMap, ListBuffer}
 
 
 @JSImport("resources/ChessBoard.css", JSImport.Default) 
@@ -21,11 +21,16 @@ import scala.collection.mutable.{Map => MMap}
 object ChessBoardCSS extends js.Object
 
 object ChessMain {
-
     val newBoard = new BoardAction
-    newBoard.start("test1")
+    newBoard.start("test4")
+    var isWhite = newBoard.boardisWhite
+
+    var historyBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
+    var simpleHistory = ListBuffer(1)
+    // For switching
+    var tempBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
     
-    private val numLocKeyPair = {
+    private[this] val numLocKeyPair = {
         val value = (for (i <- (1 to 8).reverseIterator; j <- ('a' to 'h')) yield (s"$j" + s"$i")).toArray
         val key = (for (i <- 0 to 63) yield i).toArray
         key.zip(value).toMap -> value.zip(key).toMap
@@ -38,7 +43,10 @@ object ChessMain {
     def isExistHere(ipt2: Int) = newBoard.isExistHere(numLocKeyPair._1(ipt2))
 
     def currentUniShow(str: String) = newBoard.currentUniShow(str)
-    def currentRangeMMap(str: String) = PieceRule(currentBoardShow())(str).map(i => numLocKeyPair._2(i.location))
+    def currentRangeMMap(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite)(str).map(i => numLocKeyPair._2(i.location))
+    def currentRangeMMap_Sup(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite).keys.toIndexedSeq
+
+    def act(from: String, to: String) = newBoard.act(from, to)
 
 }
 
@@ -50,7 +58,9 @@ object ChessMain {
     onClick: () => Unit,
     onMouseOver: () => Unit,
     onMouseLeave: () => Unit,
+    actionSurge: () => Unit
   )
+
 
   val component = FunctionalComponent[Props] { props =>
     button(
@@ -72,6 +82,7 @@ object ChessMain {
     type Props = Unit
     case class State(
         square: Array[Int]
+        // TODO: Add Array Special Action to additional action
     )
 
     def initialState: State = {
@@ -104,7 +115,8 @@ object ChessMain {
             bgBool = false,
             onClick = {() => this.handleClick(i)},
             onMouseLeave = {() => this.handleLeave(i)},
-            onMouseOver = {() => this.handleOver(i)}
+            onMouseOver = {() => this.handleOver(i)},
+            actionSurge = {() => this.actionSurge(i)}
         )
     }
 
@@ -117,8 +129,10 @@ object ChessMain {
             case 1 => squareState = initialState.square
             case _ => {}
         }
-        for (k <- ChessMain.currentRangeMMap(intToChessLoc(i))) {
-            squareState(k) = 2
+        if (ChessMain.currentRangeMMap_Sup(intToChessLoc(i), ChessMain.isWhite) contains intToChessLoc(i)) {
+            for (k <- ChessMain.currentRangeMMap(intToChessLoc(i), ChessMain.isWhite)) {
+                squareState(k) = 2
+            }
         }
         this.setState(State(squareState))
     }
@@ -132,9 +146,16 @@ object ChessMain {
                 tmp(i) = 3
                 State(tmp)
             case 2 => initialState
+            case 3 =>
+                val tmp = squareState
+                tmp(i) = 1
+                State(tmp)
         }
-        println(squareState(i))
         this.setState(stateNew)
+    }
+
+    def actionSurge(i: Int) = {
+
     }
 
     def render(): ReactElement = {
@@ -147,7 +168,12 @@ object ChessMain {
             ),
             p(
                 button(className:="Temp-Clear-Button", onClick:={() => this.setState(initialState)})(
-                    "Clear"
+                    "Clearrr"
+                )
+            ),
+            p(
+                button(onClick:={() => ChessMain.act("e1","f2"); render()})(
+                    "Act example"
                 )
             ),
             p(

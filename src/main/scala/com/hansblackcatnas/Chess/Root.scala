@@ -114,7 +114,23 @@ class Root {
         tmpGrid("g4") = Rook.<<#>; tmpGrid("c3") = Bishop.<#>>
         tmpGrid
     }
+    val testGrid4 = {
+        var tmpGrid = emptyGrid.clone()
+        tmpGrid("e1") = King.<<@>; tmpGrid("e8") = King.<@>>; tmpGrid("f4") = Rook.<<#> 
+        tmpGrid("h1") = Rook.<<@>; tmpGrid("h8") = Rook.<@>>; tmpGrid("a1") = Rook.<<@>; tmpGrid("a8") = Rook.<@>>
+        tmpGrid("e7") = Rook.<#>>
+        tmpGrid
+    }
 
+    def infoCloneWithNotInit(i: Info): Info = {
+        i match {
+            case InfoNone => { throw new Exception("Trying to clean empty Info") }
+            case InfoBlack(kind, init) => 
+                InfoBlack(kind, false)
+            case InfoWhite(kind, init) => 
+                InfoWhite(kind, false)
+        }
+    }
 
     def _debugPrintB(currentBoard: MMap[String, Info]): Unit = {
         def toUni(ipt: Info) = {
