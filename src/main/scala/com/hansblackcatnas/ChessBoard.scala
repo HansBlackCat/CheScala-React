@@ -22,7 +22,7 @@ object ChessBoardCSS extends js.Object
 
 object ChessMain {
     val newBoard = new BoardAction
-    newBoard.start("test4")
+    newBoard.start()
     var isWhite = newBoard.boardisWhite
 
     var historyBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
@@ -38,6 +38,7 @@ object ChessMain {
 
 
     def currentBoardShow() = newBoard.currentBoardShow()
+    def currentBoardDebugShow() = newBoard.debugPrintBoard
 
     def isExistHere(ipt: String) = newBoard.isExistHere(ipt)
     def isExistHere(ipt2: Int) = newBoard.isExistHere(numLocKeyPair._1(ipt2))
@@ -46,8 +47,9 @@ object ChessMain {
     def currentRangeMMap(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite)(str).map(i => numLocKeyPair._2(i.location))
     def currentRangeMMap_Sup(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite).keys.toIndexedSeq
 
-    def act(from: String, to: String) = newBoard.act(from, to)
+    def act(from: String, to: String) = newBoard.act(from, to, ChessMain.isWhite)
 
+    // TODO: Check, CheckMate, Steil, Draw, Promotion
 }
 
 @react object ChessSquare {
@@ -81,14 +83,15 @@ object ChessMain {
 @react class ChessBoard extends Component {
     type Props = Unit
     case class State(
-        square: Array[Int]
+        square: Array[Int],
         // TODO: Add Array Special Action to additional action
+        board: Array[String]
     )
 
     def initialState: State = {
         val tmp = Array.fill(64)(0)
         for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
-        State(tmp)
+        State(tmp, objectBoardPuller())
     }
 
     private val css = ChessBoardCSS
@@ -101,14 +104,15 @@ object ChessMain {
     
     def renderSquare(i: Int): ReactElement = {
         ChessSquare(
-            value = ChessMain.currentUniShow(intToChessLoc(i)),
+            // TODO: MORE Flexible
+            value = this.state.board(i),
             bgColor = {
                 // OnBase -- 0 -> Non-Exist, 1 -> Exist
                 if (((i/8)%2+i)%2 == 0 && 0 <= this.state.square(i) && this.state.square(i) < 2) "#ffcf9f" 
                 // OnHover -- rangeFinder
                 else if (this.state.square(i) == 2) "red"
                 // OnClick -- Chooser
-                else if (this.state.square(i) == 3) "#dbc6eb"
+                else if (this.state.square(i) == 3) "blue"
                 // OnBase2
                 else "#d28c45"
             },
@@ -120,21 +124,30 @@ object ChessMain {
         )
     }
 
+    def objectBoardPuller() = {
+        val tmp = Array.fill(64)("")
+        for (i <- 0 to 63) {
+            tmp(i) = ChessMain.currentUniShow(intToChessLoc(i))
+        }
+        tmp
+    }
+
     def handleLeave(i: Int) = {
         //this.setState(initialState)
     }
     def handleOver(i: Int) = {
         var squareState = this.state.square.clone()
-        squareState(i) match {
-            case 1 => squareState = initialState.square
-            case _ => {}
-        }
-        if (ChessMain.currentRangeMMap_Sup(intToChessLoc(i), ChessMain.isWhite) contains intToChessLoc(i)) {
+
+        if (squareState.contains(2) && !squareState.contains(3)) squareState = initialState.square
+
+        if ((ChessMain.currentRangeMMap_Sup(intToChessLoc(i), ChessMain.isWhite) contains intToChessLoc(i)) 
+        && !squareState.contains(3) 
+        ) {
             for (k <- ChessMain.currentRangeMMap(intToChessLoc(i), ChessMain.isWhite)) {
                 squareState(k) = 2
             }
         }
-        this.setState(State(squareState))
+        this.setState(State(squareState, objectBoardPuller()))
     }
 
     def handleClick(i: Int) = {
@@ -143,19 +156,37 @@ object ChessMain {
             case 0 => initialState
             case 1 => 
                 val tmp = squareState
-                tmp(i) = 3
-                State(tmp)
-            case 2 => initialState
+                if (!squareState.contains(3)) tmp(i) = 3
+                State(tmp, this.state.board)
+            case 2 => 
+                if (squareState contains 3) {
+                    val from = squareState indexOf 3
+                    val to = i
+                    actWrap(from, to)
+                } else initialState
             case 3 =>
                 val tmp = squareState
                 tmp(i) = 1
-                State(tmp)
+                State(tmp, this.state.board)
         }
         this.setState(stateNew)
     }
 
     def actionSurge(i: Int) = {
 
+    }
+
+    def actWrap(from: Int, to: Int) = {
+        val fromLoc = intToChessLoc(from) 
+        val toLoc = intToChessLoc(to)
+        ChessMain.act(fromLoc, toLoc)
+        ChessMain.isWhite = !ChessMain.isWhite
+        // History Save
+
+        val tmp = Array.fill(64)(0)
+        for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
+
+        State(tmp, objectBoardPuller())
     }
 
     def render(): ReactElement = {
@@ -167,13 +198,13 @@ object ChessMain {
                 "History"
             ),
             p(
-                button(className:="Temp-Clear-Button", onClick:={() => this.setState(initialState)})(
-                    "Clearrr"
+                button(className:="Temp-Clear-Button", onClick:={() => this.setState(initialState);})(
+                    "Restart"
                 )
             ),
             p(
-                button(onClick:={() => ChessMain.act("e1","f2"); render()})(
-                    "Act example"
+                button(onClick:={() => ChessMain.currentBoardDebugShow()})(
+                    "Debug Print"
                 )
             ),
             p(
@@ -248,7 +279,7 @@ object ChessMain {
                         renderSquare(54),
                         renderSquare(55),
                     ),
-                    div(className:="Board-Row", onClick:={ ()=>{ println() }})(
+                    div(className:="Board-Row")(
                         renderSquare(56),
                         renderSquare(57),
                         renderSquare(58),

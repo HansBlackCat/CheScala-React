@@ -166,7 +166,7 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
               )
               .map(_.toExLoc())
           case false =>
-            Array(locArr +> (1, 1), locArr +> (-1, 1))
+            Array(locArr +> (1, -1), locArr +> (-1, -1))
               .filter(i => 0 <= i(0) && i(0) < 8 && 0 <= i(1) && i(1) < 8)
               .filter(j =>
                 currentBoard(j.toExLoc().location) match {
@@ -178,7 +178,33 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
         }
       } else Array[ExLocation]()
     }
-    kindMatch diff allyfoeMatch concat pawnSpecial
+    val pawnCantCatchFront = {
+      if (kind == Pawn) {
+        isWhite match {
+          case true =>
+            Array(locArr +> (0, 1), locArr +> (0, 2))
+              .filter(i => 0 <= i(0) && i(0) < 8 && 0 <= i(1) && i(1) < 8)
+              .filter(j =>
+                currentBoard(j.toExLoc().location) match {
+                  case InfoBlack(kind, init) => true
+                  case _                     => false
+                }
+              )
+              .map(_.toExLoc())
+          case false =>
+            Array(locArr +> (0, -1), locArr +> (0, -2))
+              .filter(i => 0 <= i(0) && i(0) < 8 && 0 <= i(1) && i(1) < 8)
+              .filter(j =>
+                currentBoard(j.toExLoc().location) match {
+                  case InfoWhite(kind, init) => true
+                  case _                     => false
+                }
+              )
+              .map(_.toExLoc())
+        }
+      } else Array[ExLocation]()
+    }
+    kindMatch diff allyfoeMatch concat pawnSpecial diff pawnCantCatchFront
   }
 
   private[this] def _rangeFinder(ipt: MMap[String, Info]) = {
@@ -426,15 +452,15 @@ object PieceRule {
 
     val bwKingLoc = Array("Null", "Null")
     for (i <- currentBoard) {
-        i._2 match {
-            case InfoBlack(kind, init) if kind == King => bwKingLoc(0) = i._1
-            case InfoWhite(kind, init) if kind == King => bwKingLoc(1) = i._1
-            case _ => {}
-        }
+      i._2 match {
+        case InfoBlack(kind, init) if kind == King => bwKingLoc(0) = i._1
+        case InfoWhite(kind, init) if kind == King => bwKingLoc(1) = i._1
+        case _                                     => {}
+      }
     }
 
     val blacks = {
-      var tmp =  Array[String]()
+      var tmp = Array[String]()
       for (tup <- currentBoard) {
         tup._2 match {
           case InfoBlack(kind, init) => tmp = tmp appended tup._1
@@ -453,46 +479,45 @@ object PieceRule {
       }
       tmp
     }
-    
-    
+
     val findIfChecked: Boolean = {
-        if (isWhite) {
-            var tmp = false
-            for (i <- rangeOfAll) {
-                if (i._2 contains ExLocation(bwKingLoc(1))) tmp = true
-            }
-            tmp
-        } else {
-            var tmp = false
-            for (i <- rangeOfAll) {
-                if (i._2 contains ExLocation(bwKingLoc(0))) tmp = true
-            }
-            tmp
+      if (isWhite) {
+        var tmp = false
+        for (i <- rangeOfAll) {
+          if (i._2 contains ExLocation(bwKingLoc(1))) tmp = true
         }
+        tmp
+      } else {
+        var tmp = false
+        for (i <- rangeOfAll) {
+          if (i._2 contains ExLocation(bwKingLoc(0))) tmp = true
+        }
+        tmp
+      }
     }
 
     if (isWhite) {
-        if (findIfChecked) {
-            MMap(bwKingLoc(1) -> rangeOfAll(bwKingLoc(1)))
-        } else {
-            rangeOfAll.filter( tup =>
-                tup match {
-                    case (a, b) if whites contains a => true
-                    case _ => false
-                }
-            )
-        }
+      if (findIfChecked) {
+        MMap(bwKingLoc(1) -> rangeOfAll(bwKingLoc(1)))
+      } else {
+        rangeOfAll.filter(tup =>
+          tup match {
+            case (a, b) if whites contains a => true
+            case _                           => false
+          }
+        )
+      }
     } else {
-        if (findIfChecked) {
-            MMap(bwKingLoc(0) -> rangeOfAll(bwKingLoc(0)))
-        } else {
-            rangeOfAll.filter( tup =>
-                tup match {
-                    case (a, b) if blacks contains a => true
-                    case _ => false
-                }
-            )
-        }
+      if (findIfChecked) {
+        MMap(bwKingLoc(0) -> rangeOfAll(bwKingLoc(0)))
+      } else {
+        rangeOfAll.filter(tup =>
+          tup match {
+            case (a, b) if blacks contains a => true
+            case _                           => false
+          }
+        )
+      }
     }
 
   }

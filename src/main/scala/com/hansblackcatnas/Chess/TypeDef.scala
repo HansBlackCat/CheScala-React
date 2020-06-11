@@ -13,6 +13,12 @@ case class ExLocation(location: String) extends Location {
         if (abs(this.location.tail.toInt - ipt.tail.toInt) == 2) true
         else false
     }
+    def specForEnPassantCheck(ipt: ExLocation) = {
+        val tmp1 = this.toArrLoc
+        val tmp2 = ipt.toArrLoc
+        if (abs(tmp1(0) - tmp2(0)) + abs(tmp1(1) - tmp2(1)) == 2) true
+        else false
+    }
 
     def + (ipt: Array[Int]): ExLocation = {
         require(ipt.length < 3)

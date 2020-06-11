@@ -112,16 +112,13 @@ class BoardAction extends Root with PGN {
             }
     }
 
-    def act(from: String, to: String) = {
-        println("called")
+    def act(from: String, to: String, isWhite: Boolean) = {
         if (isWhite) {
-        println("isWhite")
             val possibleRangeMMap = PieceRule(currentBoard, isWhite)
             if (possibleRangeMMap.keys.toIndexedSeq contains from) {
-        println("possiblefrom")
                 val toPossibleArr = possibleRangeMMap(from).map(_.location)
                 if (toPossibleArr contains to) {
-        println("toPossibleArr")
+                    // --- Pawn Match ---
                     if ((currentBoard(from) match {
                         case InfoWhite(kind, true) if kind == Pawn => true
                         case InfoBlack(_, _) => throw new Exception("Why you here?")
@@ -129,21 +126,43 @@ class BoardAction extends Root with PGN {
                     }) && 
                         ExLocation(from).forpawnDoubleMoveCheckFromTo(to)
                     ){
-        println("PawnDouble")
                         val tmpInfo = currentBoard(from)
                         val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove to
                         currentBoard(to) = tmpInfo
+                        currentBoard(from) = InfoNone
+                    } else if (
+                        // --- diagonal move check ---
+                        (currentBoard(from) match {
+                            case InfoWhite(kind, init) if kind == Pawn =>   
+                                val tmp1 = ExLocation(from)
+                                val tmp2 = ExLocation(to)
+                                if (tmp1.specForEnPassantCheck(tmp2)) true else false
+                            case _ => false
+                        }) &&
+                        // --- Enpas ---
+                        (currentBoard(to) match {
+                            case InfoNone => true
+                            case _ => false
+                        })
+                    ) {
+                        val tmpInfo = currentBoard(from)
+                        val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove (to.head +: "5")
+                        currentBoard(to.head +: "5") = InfoNone
+                        currentBoard(to) = tmpInfo
+                        currentBoard(from) = InfoNone
+                    } else {
+                        val tmpInfo = (currentBoard(from))
+                        val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove to
+                        currentBoard(to) = infoCloneWithNotInit(tmpInfo)
+                        currentBoard(from) = InfoNone
                     }
-                    val tmpInfo = (currentBoard(from))
-        println("called")
-                    val dontRef = currentBoard remove from
-        println("called")
-                    currentBoard(to) = infoCloneWithNotInit(tmpInfo)
-        println("called")
                 }
             }
         } else {
-            val possibleRangeMMap = PieceRule(currentBoard, !isWhite)
+            val possibleRangeMMap = PieceRule(currentBoard, isWhite)
             if (possibleRangeMMap.keys.toIndexedSeq contains from) {
                 val toPossibleArr = possibleRangeMMap(from).map(_.location)
                 if (toPossibleArr contains to) {
@@ -156,11 +175,37 @@ class BoardAction extends Root with PGN {
                     ){
                         val tmpInfo = currentBoard(from)
                         val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove to
                         currentBoard(to) = tmpInfo
+                        currentBoard(from) = InfoNone
+                    } else if (
+                        // --- diagonal move check ---
+                        (currentBoard(from) match {
+                            case InfoBlack(kind, init) if kind == Pawn =>   
+                                val tmp1 = ExLocation(from)
+                                val tmp2 = ExLocation(to)
+                                if (tmp1.specForEnPassantCheck(tmp2)) true else false
+                            case _ => false
+                        }) &&
+                        // --- Enpas ---
+                        (currentBoard(to) match {
+                            case InfoNone => true
+                            case _ => false
+                        })
+                    ) {
+                        val tmpInfo = currentBoard(from)
+                        val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove (to.head +: "4")
+                        currentBoard(to.head +: "4") = InfoNone
+                        currentBoard(to) = tmpInfo
+                        currentBoard(from) = InfoNone 
+                    } else {
+                        val tmpInfo = (currentBoard(from))
+                        val dontRef = currentBoard remove from
+                        val dontRef2 = currentBoard remove to
+                        currentBoard(to) = infoCloneWithNotInit(tmpInfo)
+                        currentBoard(from) = InfoNone
                     }
-                    val tmpInfo = (currentBoard(from))
-                    val dontRef = currentBoard remove from
-                    currentBoard(to) = infoCloneWithNotInit(tmpInfo)
                 }
             }
         }
