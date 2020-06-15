@@ -30,6 +30,6 @@ object Main {
       elem
     }
 
-    ReactDOM.render(ChessBoard(), container)
+    ReactDOM.render(Front(), container)
   }
 }
