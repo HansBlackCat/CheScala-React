@@ -121,6 +121,11 @@ class Root {
         tmpGrid("e7") = Rook.<#>>
         tmpGrid
     }
+    val testGrid5 = {
+        var tmpGrid = emptyGrid.clone()
+        tmpGrid("f8") = King.<#>>; tmpGrid("f5") = King.<<#>; tmpGrid("f7") = Pawn.<<#>
+        tmpGrid
+    }
 
     def infoCloneWithNotInit(i: Info): Info = {
         i match {

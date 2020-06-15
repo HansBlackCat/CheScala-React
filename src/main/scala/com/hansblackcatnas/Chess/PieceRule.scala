@@ -240,7 +240,7 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
   }
 
   def rangeFinder = {
-    val (rangeFinderMMap, forKingRangeB, forKingRangeW) = _rangeFinder(
+    var (rangeFinderMMap, forKingRangeB, forKingRangeW) = _rangeFinder(
       _currentBoard
     )
     for (i <- _currentBoard) {
@@ -268,6 +268,22 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
 
             for (k <- copyWhite) {
               if (k._2 contains j) whenMoveCheck = j +: whenMoveCheck
+            }
+          }
+          // WPawn Diag
+          for (x <- _currentBoard) {
+            x._2 match {
+              case InfoWhite(Pawn, init) => 
+                val tmpSave = forKingRangeW(x._1)
+                ExLocation(x._1).toArrLoc(0) match {
+                  case a if (a<1) => 
+                    forKingRangeW(x._1) = tmpSave ++ Array(ExLocation(x._1) + (1,1))
+                  case a if (a>6) =>
+                    forKingRangeW(x._1) = tmpSave ++ Array(ExLocation(x._1) + (-1,1))
+                  case c          =>
+                    forKingRangeW(x._1) = tmpSave ++ Array(ExLocation(x._1) + (1,1), ExLocation(x._1) + (-1,1))
+                }
+              case _ => {}
             }
           }
           // estimate king checked position
@@ -354,21 +370,31 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
           } {
             val copyCurrent = _currentBoard.clone()
             copyCurrent(j.location) = InfoWhite(Pawn, false)
-            val copyWhite = _rangeFinder(copyCurrent)._3
+            val copyBlack = _rangeFinder(copyCurrent)._2
 
-            for (k <- copyWhite) {
+            for (k <- copyBlack) {
               if (k._2 contains j) whenMoveCheck = j +: whenMoveCheck
+            }
+          }
+          // BPawn Diag
+          for (x <- _currentBoard) {
+            x._2 match {
+              case InfoBlack(Pawn, init) => 
+                val tmpSave = forKingRangeB(x._1)
+                ExLocation(x._1).toArrLoc(0) match {
+                  case a if (a<1) => 
+                    forKingRangeB(x._1) = tmpSave ++ Array(ExLocation(x._1) + (1,-1))
+                  case a if (a>6) =>
+                    forKingRangeB(x._1) = tmpSave ++ Array(ExLocation(x._1) + (-1,-1))
+                  case c          =>
+                    forKingRangeB(x._1) = tmpSave ++ Array(ExLocation(x._1) + (1,-1), ExLocation(x._1) + (-1,-1))
+                }
+              case _ => {}
             }
           }
           for (l <- forKingRangeB) {
             for (m <- l._2) {
               if (kingPossible contains m) whenMoveCheck = m +: whenMoveCheck
-            }
-          }
-          // TODO: Checking Move
-          for (l <- forKingRangeW) {
-            if (l._2 contains ExLocation(i._1)) {
-              //...//
             }
           }
           // ----------------------------------------------------------------------------

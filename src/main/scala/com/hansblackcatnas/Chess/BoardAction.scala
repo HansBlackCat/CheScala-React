@@ -1,31 +1,51 @@
 package com.hansblackcat.Chess
 import scala.collection.mutable.{Map=>MMap, ListBuffer}
 
-class BoardAction extends Root with PGN {
+trait DeepCloneable[A] { self: A =>
+    def deepClone: A
+}
+
+class BoardAction extends Root with PGN with DeepCloneable[BoardAction] {
+
+
     // TagPair
     // Comment
     // private[this] var commentBuffer: MMap[Int, Comment]
 
-    private[this] var currentBoard: MMap[String, Info] = MMap.empty
-    private[this] var historyBoard: ListBuffer[MMap[String,Info]] = ListBuffer()
+    private var currentBoard: MMap[String, Info] = MMap.empty
+    
+    //private[this] var historyBoard: ListBuffer[MMap[String,Info]] = ListBuffer()
 
-    private[this] var currentPieceRule: MMap[String,Array[ExLocation]] = MMap.empty
+    private var currentPieceRule: MMap[String,Array[ExLocation]] = MMap.empty
 
     // (whiteAction, blackAction)
-    private[this] var historyMoveText = ListBuffer[(String,String)]()
+    private var historyMoveText = ListBuffer[(String,String)]()
 
-    private[this] var isWhite = true
+    private var isWhite = true
 
     // TODO make this to case class
-    private[this] var moveTextBuffer = "" // also check white, black .isEmpty
+    private var moveTextBuffer = "" // also check white, black .isEmpty
+    
+    override def deepClone: BoardAction = {
+        val deepCopiedBoard = new BoardAction
+        deepCopiedBoard.start()
+        deepCopiedBoard.currentBoard = currentBoard.clone()
+        deepCopiedBoard.currentPieceRule = currentPieceRule.clone()
+        deepCopiedBoard.historyMoveText = historyMoveText.clone()
+        deepCopiedBoard.isWhite = isWhite
+        deepCopiedBoard.moveTextBuffer = moveTextBuffer
 
-    private[this] def _start(i: String) = {
+        deepCopiedBoard
+    }
+
+    private def _start(i: String) = {
         currentBoard = i match {
             case "base"  => baseMapHash
             case "test1" => testGrid1
             case "test2" => testGrid2
             case "test3" => testGrid3
             case "test4" => testGrid4
+            case "test5" => testGrid5
             case _       => baseMapHash
         }
         currentPieceRule = PieceRule(currentBoard)
@@ -77,15 +97,34 @@ class BoardAction extends Root with PGN {
 
     def boardisWhite = isWhite
 
-    def actWithMoveTest(ipt: String) = {
-        // act sth
-        moveTextBuffer match {
-            case a if a.isEmpty  => moveTextBuffer = ipt
-            case b if !b.isEmpty => 
-                historyMoveText = historyMoveText :+ (b, ipt)
-                moveTextBuffer = ""
+    def kingLocation(isWhite: Boolean) = {
+        if (isWhite) {
+            var tmp = ""
+            for (i <- currentBoard) {
+                if (
+                    i._2 match {
+                        case InfoWhite(kind, init) if kind==King => true
+                        case _ => false
+                    }
+                ) {
+                    tmp = i._1
+                }
+            }
+            tmp
+        } else {
+            var tmp = ""
+            for (i <- currentBoard) {
+                if (
+                    i._2 match {
+                        case InfoBlack(kind, init) if kind==King => true
+                        case _ => false 
+                    }
+                ) {
+                    tmp = i._1
+                }
+            }
+            tmp
         }
-
     }
 
     def toUni(ipt: Info) = {

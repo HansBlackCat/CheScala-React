@@ -21,12 +21,14 @@ import scala.collection.mutable.{Map => MMap, ListBuffer}
 object ChessBoardCSS extends js.Object
 
 object ChessMain {
-    val newBoard = new BoardAction
-    newBoard.start()
+    var newBoard = new BoardAction
+    newBoard.start("test5")
     var isWhite = newBoard.boardisWhite
 
+    // Board copy, isWhite
     var historyBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
-    var simpleHistory = ListBuffer(1)
+    // (from, to, isWhite)
+    var simpleHistory = ListBuffer[(String, String, PGNPieceKind, Boolean)]()
     // For switching
     var tempBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
     
@@ -36,6 +38,19 @@ object ChessMain {
         key.zip(value).toMap -> value.zip(key).toMap
     }
 
+    def purge() = {
+        newBoard.start()
+        isWhite = true
+        historyBoard = ListBuffer()
+        simpleHistory = ListBuffer()
+        tempBoard = ListBuffer()
+    }
+    def backtoPast(i: Int) = {
+        newBoard = historyBoard(i)._1
+        isWhite = newBoard.boardisWhite
+        historyBoard = historyBoard.slice(i+1, historyBoard.length)
+        simpleHistory = simpleHistory.slice(i+1, simpleHistory.length)
+    }
 
     def currentBoardShow() = newBoard.currentBoardShow()
     def currentBoardDebugShow() = newBoard.debugPrintBoard
@@ -44,12 +59,60 @@ object ChessMain {
     def isExistHere(ipt2: Int) = newBoard.isExistHere(numLocKeyPair._1(ipt2))
 
     def currentUniShow(str: String) = newBoard.currentUniShow(str)
+    def currentRangeMMap_Raw = PieceRule(currentBoardShow())
     def currentRangeMMap(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite)(str).map(i => numLocKeyPair._2(i.location))
     def currentRangeMMap_Sup(str: String, isWhite: Boolean) = PieceRule(currentBoardShow(), isWhite).keys.toIndexedSeq
 
     def act(from: String, to: String) = newBoard.act(from, to, ChessMain.isWhite)
+    
 
-    // TODO: Check, CheckMate, Steil, Draw, Promotion
+    def curkingLoc(isWhite: Boolean) = newBoard.kingLocation(isWhite)
+    def promotion(loc: String) = {
+        act(loc, loc)
+    } 
+    
+    def ischeck() = {
+        var booltmp = false
+        for (i <- PieceRule(currentBoardShow(), !isWhite)) {
+            if (i._2 contains ExLocation(curkingLoc(isWhite))) booltmp = true
+        }
+
+        def fiftyPawnCheck(ipt: ListBuffer[(String, String, PGNPieceKind, Boolean)]) = {
+            val tmp = ipt.slice(0,50)
+            var tmpBool = false
+            for (i <- tmp) {
+                if (i._3 == Pawn) tmpBool = true
+            } 
+            tmpBool
+        } 
+
+        if (
+            simpleHistory.length > 10 &&
+            simpleHistory(0) == simpleHistory(4) && simpleHistory(4) == simpleHistory(8) &&
+            simpleHistory(1) == simpleHistory(5) && simpleHistory(5) == simpleHistory(9)
+        ) "ThreeFold"
+        else if (
+            simpleHistory.length > 50 &&
+            fiftyPawnCheck(simpleHistory) &&
+            PieceRule(historyBoard(50)._1.currentBoardShow()).keys.size == PieceRule(currentBoardShow()).keys.size
+        ) "Fifty-move"
+        else if (booltmp && PieceRule(currentBoardShow(), isWhite)(ChessMain.curkingLoc(isWhite)).isEmpty) "CheckMate"
+        else if (booltmp) "Check"
+        else if (!booltmp) {
+            var tmp = 0
+            for (l <- PieceRule(currentBoardShow(), isWhite)) {
+                tmp = tmp + l._2.length
+            }
+            if (tmp == 0) "StaleMate"
+            else ""
+        }
+        else ""
+
+
+    }
+
+
+    // TODO: Check, CheckMate, Stale, Draw, Promotion, Pawn Attack Range Management
 }
 
 @react object ChessSquare {
@@ -85,7 +148,7 @@ object ChessMain {
     case class State(
         square: Array[Int],
         // TODO: Add Array Special Action to additional action
-        board: Array[String]
+        board: Array[String],
     )
 
     def initialState: State = {
@@ -132,6 +195,7 @@ object ChessMain {
         tmp
     }
 
+
     def handleLeave(i: Int) = {
         //this.setState(initialState)
     }
@@ -162,6 +226,8 @@ object ChessMain {
                 if (squareState contains 3) {
                     val from = squareState indexOf 3
                     val to = i
+
+
                     actWrap(from, to)
                 } else initialState
             case 3 =>
@@ -179,15 +245,52 @@ object ChessMain {
     def actWrap(from: Int, to: Int) = {
         val fromLoc = intToChessLoc(from) 
         val toLoc = intToChessLoc(to)
+        
+        val kind = ChessMain.currentBoardShow()(fromLoc) match {
+            case InfoWhite(kind, init) => kind
+            case InfoBlack(kind, init) => kind
+        }
+
+        // History Save
+        val forStack = ChessMain.newBoard
+
+        ChessMain.simpleHistory.prepend((fromLoc, toLoc, kind, ChessMain.isWhite))
+        ChessMain.historyBoard.prepend((ChessMain.newBoard.deepClone, ChessMain.isWhite))
+
         ChessMain.act(fromLoc, toLoc)
         ChessMain.isWhite = !ChessMain.isWhite
-        // History Save
 
+
+
+        ChessMain.tempBoard.prepend((ChessMain.newBoard, ChessMain.isWhite))
         val tmp = Array.fill(64)(0)
         for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
 
+        this.setState(State(tmp, objectBoardPuller()))
+        ChessMain.ischeck() match {
+            case "Check" => dom.window.alert("Check"); ChessMain.purge()
+            case "CheckMate" => dom.window.alert("CheckMate"); ChessMain.purge()
+            case "StaleMate" => dom.window.alert("StaleMate"); ChessMain.purge()
+            case "ThreeFold" => dom.window.alert("ThreeFold"); ChessMain.purge()
+            case "Fifty-move" => dom.window.alert("Fifty-move"); ChessMain.purge()
+            case _ => {}
+        }
+        
+
         State(tmp, objectBoardPuller())
     }
+
+    
+    def callHistroy(i: Int) = {
+        ChessMain.backtoPast(0)
+
+        val objectBP = objectBoardPuller()
+        
+        val tmp = Array.fill(64)(0)
+        for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
+        this.setState(State(tmp, objectBP))
+    }
+
 
     def render(): ReactElement = {
         div(className:="ChessBoard-Total-Render")(
@@ -205,6 +308,11 @@ object ChessMain {
             p(
                 button(onClick:={() => ChessMain.currentBoardDebugShow()})(
                     "Debug Print"
+                )
+            ),
+            p(
+                button(onClick:={() => callHistroy(0); ChessMain.currentBoardDebugShow()})(
+                    "history call"
                 )
             ),
             p(
