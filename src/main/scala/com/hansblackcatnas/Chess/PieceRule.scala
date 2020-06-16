@@ -273,6 +273,7 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
           // WPawn Diag
           for (x <- _currentBoard) {
             x._2 match {
+              case InfoWhite(Pawn, init) if ExLocation(x._1).toArrLoc(1) == 7 => {} 
               case InfoWhite(Pawn, init) => 
                 val tmpSave = forKingRangeW(x._1)
                 ExLocation(x._1).toArrLoc(0) match {
@@ -379,6 +380,7 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
           // BPawn Diag
           for (x <- _currentBoard) {
             x._2 match {
+              case InfoBlack(Pawn, init) if ExLocation(x._1).toArrLoc(1) == 0 => {} 
               case InfoBlack(Pawn, init) => 
                 val tmpSave = forKingRangeB(x._1)
                 ExLocation(x._1).toArrLoc(0) match {

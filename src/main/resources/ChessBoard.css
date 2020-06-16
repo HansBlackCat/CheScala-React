@@ -22,16 +22,35 @@ header {
     font-size: 24px;
     font-weight: bold;
     line-height: 34px;
-    height: 34px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 34px;
-    height: 34px;
+    width: 53px;
+    height: 53px;
 }
   
 .square:focus {
+    outline: none;
+}
+
+.emptySquare {
+    background: #e7e7e7;
+    border: 0.2px solid transparent;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    line-height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 53px;
+    height: 53px;
+}
+  
+.emptySquare:focus {
     outline: none;
 }
 
@@ -41,12 +60,49 @@ header {
     display: table;
 }
 
+
 .ChessBoard-Total-Render {
-    margin: 50px 50px 50px 50px;
-    border: 10px solid #4CAF50;
-    padding: 10px 10px 10px 10px;
+    margin: 10px 160px 10px 160px;
+    /*border: 10px solid #4CAF50;
+    padding: 10px 10px 10px 10px; */
 }
 
+
 .Total-Board {
-    border: 5px solid gray;
+    border: 7.5px solid gray;
+    float: right;
+}
+
+.LeftBoard {
+    float: left;
+    height: 400px;
+    width: 500px;
+}
+
+.LeftHistory {
+    overflow: scroll;
+    height: 300px;
+}
+
+.LeftHistory-Head {
+    font-size: larger;
+}
+
+
+.ButtonCallHistory {
+    /*
+    background: #e7e7e7;
+    border: 0.2px solid transparent;
+    float: left;
+    font-size: auto;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    line-height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    */
+    text-align: center;
+    width: 300px;
+    height: 25px; 
 }

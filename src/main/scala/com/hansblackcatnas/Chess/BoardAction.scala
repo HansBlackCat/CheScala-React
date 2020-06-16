@@ -250,6 +250,19 @@ class BoardAction extends Root with PGN with DeepCloneable[BoardAction] {
         }
     }
 
+    def actAndSub(from: String, isWhite: Boolean, toward: String) = {
+        act(from, from, isWhite)
+        val dontRef = currentBoard remove from
+        currentBoard(from) = {
+            if (isWhite) {
+                InfoWhite(Queen, false)
+            } else {
+                InfoBlack(Queen, false)
+            }
+        }
+
+    }
+
 
     
     // PGN Interpreter

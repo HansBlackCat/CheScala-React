@@ -24,15 +24,19 @@ object ChessBoardCSS extends js.Object
 @js.native
 object ChessFrontCSS extends js.Object
 
+@JSImport("resources/logochescala.svg", JSImport.Default)
+@js.native
+object CheScalaLogo extends js.Object
+
 object ChessMain {
     var newBoard = new BoardAction
     newBoard.start("test5")
     var isWhite = newBoard.boardisWhite
 
     // Board copy, isWhite
-    var historyBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
+    var historyBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer((newBoard.deepClone, true))
     // (from, to, isWhite)
-    var simpleHistory = ListBuffer[(String, String, PGNPieceKind, Boolean)]()
+    var simpleHistory = ListBuffer[(String, String, PGNPieceKind, Boolean)](("Null", "Null", Pawn, true))
     // For switching
     var tempBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
     
@@ -71,10 +75,8 @@ object ChessMain {
     
 
     def curkingLoc(isWhite: Boolean) = newBoard.kingLocation(isWhite)
-    def promotion(loc: String) = {
-        act(loc, loc)
-    } 
-    
+    def promotion(loc: String, toward: String) = newBoard.actAndSub(loc, !ChessMain.isWhite, toward)
+
     def ischeck() = {
         var booltmp = false
         for (i <- PieceRule(currentBoardShow(), !isWhite)) {
@@ -145,6 +147,19 @@ object ChessMain {
   }
 }
 
+@react object EmptySquare {
+    case class Props(
+        value: String
+    )
+
+    val component = FunctionalComponent[Props] { props =>
+        button(
+            className:="emptySquare"
+        )(
+            props.value
+        )
+    }
+}
 
 
 @react class ChessBoard extends Component {
@@ -153,12 +168,13 @@ object ChessMain {
         square: Array[Int],
         // TODO: Add Array Special Action to additional action
         board: Array[String],
+        histroyChecker: Array[Int]
     )
 
     def initialState: State = {
         val tmp = Array.fill(64)(0)
         for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
-        State(tmp, objectBoardPuller())
+        State(tmp, objectBoardPuller(), Array())
     }
 
     private val css = ChessBoardCSS
@@ -177,9 +193,9 @@ object ChessMain {
                 // OnBase -- 0 -> Non-Exist, 1 -> Exist
                 if (((i/8)%2+i)%2 == 0 && 0 <= this.state.square(i) && this.state.square(i) < 2) "#ffcf9f" 
                 // OnHover -- rangeFinder
-                else if (this.state.square(i) == 2) "red"
+                else if (this.state.square(i) == 2) "#FC4445"
                 // OnClick -- Chooser
-                else if (this.state.square(i) == 3) "blue"
+                else if (this.state.square(i) == 3) "#97CAEF"
                 // OnBase2
                 else "#d28c45"
             },
@@ -191,12 +207,22 @@ object ChessMain {
         )
     }
 
+    def renderEmptySquare(str: String): ReactElement = {
+        EmptySquare(
+            value = str
+        )
+    }
+
     def objectBoardPuller() = {
         val tmp = Array.fill(64)("")
         for (i <- 0 to 63) {
             tmp(i) = ChessMain.currentUniShow(intToChessLoc(i))
         }
         tmp
+    }
+
+    def historyCheckerPuller() = {
+        Array.fill(ChessMain.historyBoard.length)(1)
     }
 
 
@@ -215,17 +241,20 @@ object ChessMain {
                 squareState(k) = 2
             }
         }
-        this.setState(State(squareState, objectBoardPuller()))
+        this.setState(State(squareState, objectBoardPuller(), state.histroyChecker))
     }
 
     def handleClick(i: Int) = {
         val squareState = this.state.square.clone()
         val stateNew: State = squareState(i) match {
-            case 0 => initialState
+            case 0 =>
+                val tmp = Array.fill(64)(0)
+                for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
+                State(tmp, objectBoardPuller(), state.histroyChecker)
             case 1 => 
                 val tmp = squareState
                 if (!squareState.contains(3)) tmp(i) = 3
-                State(tmp, this.state.board)
+                State(tmp, this.state.board, state.histroyChecker)
             case 2 => 
                 if (squareState contains 3) {
                     val from = squareState indexOf 3
@@ -237,7 +266,7 @@ object ChessMain {
             case 3 =>
                 val tmp = squareState
                 tmp(i) = 1
-                State(tmp, this.state.board)
+                State(tmp, this.state.board, state.histroyChecker)
         }
         this.setState(stateNew)
     }
@@ -270,58 +299,102 @@ object ChessMain {
         val tmp = Array.fill(64)(0)
         for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
 
-        this.setState(State(tmp, objectBoardPuller()))
+        // Promotion! Lovely
+        // TODO
+        val whitePromotionBlocks = (for (i <- 'a' to 'h') yield i +: "8").toArray
+        val blackPromotionBlocks = (for (i <- 'a' to 'h') yield i +: "1").toArray
+        for (wP <- whitePromotionBlocks) {
+            if (ChessMain.newBoard.currentUniShow(wP) == "\u2659") {
+                ChessMain.promotion(wP, "a")
+            }
+        }
+        for (bP <- blackPromotionBlocks) {
+            if (ChessMain.newBoard.currentUniShow(bP) == "\u265F") {
+                ChessMain.promotion(bP, "a")
+            }
+        }
+
+
+        // Check Match
         ChessMain.ischeck() match {
-            case "Check" => dom.window.alert("Check"); ChessMain.purge()
+            case "Check" => dom.window.alert("Check")
             case "CheckMate" => dom.window.alert("CheckMate"); ChessMain.purge()
             case "StaleMate" => dom.window.alert("StaleMate"); ChessMain.purge()
             case "ThreeFold" => dom.window.alert("ThreeFold"); ChessMain.purge()
             case "Fifty-move" => dom.window.alert("Fifty-move"); ChessMain.purge()
             case _ => {}
         }
-        
 
-        State(tmp, objectBoardPuller())
+        State(tmp, objectBoardPuller(), historyCheckerPuller())
     }
 
     
     def callHistroy(i: Int) = {
-        ChessMain.backtoPast(0)
+        ChessMain.backtoPast(i)
 
         val objectBP = objectBoardPuller()
         
         val tmp = Array.fill(64)(0)
         for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
-        this.setState(State(tmp, objectBP))
+        this.setState(State(tmp, objectBP, historyCheckerPuller()))
     }
 
 
     def render(): ReactElement = {
-        //div(className:="ChessBoard-Total-Render")(
-            /*
-            header(
-                h5(className := "Head")("Welcome to CheScala")
-            ),
-            p(
-                "History"
-            ),
-            p(
-                button(className:="Temp-Clear-Button", onClick:={() => this.setState(initialState);})(
-                    "Restart"
+        val historyChecker = state.histroyChecker
+        val history = ChessMain.tempBoard
+        val tmpHis = ChessMain.tempBoard
+        val moves = {
+            var tempSeq = IndexedSeq[ReactElement]()
+            for (j <- 0 until historyChecker.length) {
+                val liBuild = li(className:="ListHistory")(
+                    button(className:="ButtonCallHistory", onClick:={() => callHistroy(j)})(
+                        s"Turn ${historyChecker.length - j -1}",
+                        b(className:="ButtonCallHistory_InnerTags")(
+                            "\tYo"
+                        )
+                    ),
+                )
+                tempSeq = liBuild +: tempSeq
+            }
+            tempSeq
+        }
+
+        div(className:="ChessBoard-Total-Render")(
+            div(className := "LeftBoard")(
+                header(
+                    h5(className := "Head")("Welcome to CheScala")
+                ),
+                p(
+                    button(className:="Temp-Clear-Button", onClick:={() => ChessMain.purge;this.setState(initialState);})(
+                        "Restart"
+                    )
+                ),
+                p(
+                    button(onClick:={() => ChessMain.currentBoardDebugShow()})(
+                        "Debug Print"
+                    )
+                ),
+                p(className:="LeftHistory")(
+                    div(className:="LeftHistory-Head")("History"),
+                    ol(moves)
                 )
             ),
-            p(
-                button(onClick:={() => ChessMain.currentBoardDebugShow()})(
-                    "Debug Print"
-                )
-            ),
-            p(
-                button(onClick:={() => callHistroy(0); ChessMain.currentBoardDebugShow()})(
-                    "history call"
-                )
-            ),*/
             div(className:="Total-Board")(
                 div(className:="Board-Row")(
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                    renderEmptySquare(""),
+                ),
+                div(className:="Board-Row")(
+                    renderEmptySquare("8"),
                     renderSquare(0),
                     renderSquare(1),
                     renderSquare(2),
@@ -330,8 +403,10 @@ object ChessMain {
                     renderSquare(5),
                     renderSquare(6),
                     renderSquare(7),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("7"),
                     renderSquare(8),
                     renderSquare(9),
                     renderSquare(10),
@@ -340,8 +415,10 @@ object ChessMain {
                     renderSquare(13),
                     renderSquare(14),
                     renderSquare(15),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("6"),
                     renderSquare(16),
                     renderSquare(17),
                     renderSquare(18),
@@ -350,8 +427,10 @@ object ChessMain {
                     renderSquare(21),
                     renderSquare(22),
                     renderSquare(23),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("5"),
                     renderSquare(24),
                     renderSquare(25),
                     renderSquare(26),
@@ -360,8 +439,10 @@ object ChessMain {
                     renderSquare(29),
                     renderSquare(30),
                     renderSquare(31),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("4"),
                     renderSquare(32),
                     renderSquare(33),
                     renderSquare(34),
@@ -370,8 +451,10 @@ object ChessMain {
                     renderSquare(37),
                     renderSquare(38),
                     renderSquare(39),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("3"),
                     renderSquare(40),
                     renderSquare(41),
                     renderSquare(42),
@@ -380,8 +463,10 @@ object ChessMain {
                     renderSquare(45),
                     renderSquare(46),
                     renderSquare(47),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("2"),
                     renderSquare(48),
                     renderSquare(49),
                     renderSquare(50),
@@ -390,8 +475,10 @@ object ChessMain {
                     renderSquare(53),
                     renderSquare(54),
                     renderSquare(55),
+                    renderEmptySquare(""),
                 ),
                 div(className:="Board-Row")(
+                    renderEmptySquare("1"),
                     renderSquare(56),
                     renderSquare(57),
                     renderSquare(58),
@@ -400,9 +487,22 @@ object ChessMain {
                     renderSquare(61),
                     renderSquare(62),
                     renderSquare(63),
+                    renderEmptySquare(""),
+                ),
+                div(className:="Board-Row")(
+                    renderEmptySquare(""),
+                    renderEmptySquare("a"),
+                    renderEmptySquare("b"),
+                    renderEmptySquare("c"),
+                    renderEmptySquare("d"),
+                    renderEmptySquare("e"),
+                    renderEmptySquare("f"),
+                    renderEmptySquare("g"),
+                    renderEmptySquare("h"),
+                    renderEmptySquare(""),
                 ),
             )
-        //)
+        )
     }
 }
 
@@ -416,10 +516,14 @@ object ChessMain {
 
     private val css = ChessFrontCSS
 
-    def render(): ReactElement = {
+    def render() = {
         div(className:="Front")(
             header(className:="FrontHeader")(
-                h1(className:="HeaderTitle")("Welcome to CheScala")
+                //img(src := CheScalaLogo.asInstanceOf[String], alt := "logo-chescala"),
+                h1(className:="HeaderTitle")(
+                    "Welcome to CheScala"
+                ),
+                //h2(CheScalaLogo.asInstanceOf[String])
             ),
             p(className:="ChessBoard")(
                 ChessBoard()
@@ -427,6 +531,7 @@ object ChessMain {
         )
     }
 }
+
 
 
 
