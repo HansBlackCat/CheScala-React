@@ -1,3 +1,4 @@
+
 .Front {
     text-align: center;
 }
@@ -11,4 +12,16 @@
 
 .HeaderTitle {
     font-size: 1.5em;
+    animation: HeaderTitle-Animation 3s linear 1s;
 }
+
+@keyframes HeaderTitle-Animation {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+

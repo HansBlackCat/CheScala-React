@@ -345,8 +345,17 @@ class BoardAction extends Root with PGN with DeepCloneable[BoardAction] {
 
     // For debug printing
     def debugPrintBoard = {
+        println(_debugPrintB(currentBoard))
+    }
+
+    def debugPrintBoardWithString = {
         _debugPrintB(currentBoard)
     }
+
+    def debugPrintBoardWithString_Splitted = {
+        _debugPrintB(currentBoard).split("\n").map(_.trim())
+    }
+
     def debugPrintRangeAll = {
         for (i <- currentBoard) {
             i._2 match {

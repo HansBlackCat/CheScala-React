@@ -137,7 +137,8 @@ class Root {
         }
     }
 
-    def _debugPrintB(currentBoard: MMap[String, Info]): Unit = {
+    def _debugPrintB(currentBoard: MMap[String, Info]) = {
+        var str: String = ""
         def toUni(ipt: Info) = {
             ipt match {
                 case InfoNone => "\u2022"
@@ -164,9 +165,10 @@ class Root {
 
         for (j <- (1 to 8).reverseIterator; i <- 'a' to 'h') {
             val key = s"$i$j"
-            print(toUni(currentBoard(key)) ++ " ")
-            if (i == 'h') println("")
+            str = str ++ toUni(currentBoard(key)) ++ " "
+            if (i == 'h') str = str ++ "\n"
         }
+        str
     }
 
     def _debugPrintR(arr: Array[ExLocation]) = {

@@ -6,8 +6,18 @@
 .Head {
     font-size: larger;
     font-weight: 200;
+    border-radius: 13px;
     font-family: 'Times New Roman', Times, serif;
-    background-color: blueviolet;
+}
+
+.Header-Icon {
+    display: block;
+    text-indent: -9999px;
+    width: 95px;
+    height: 80px;
+    position: relative;
+    background: url(logochescala.svg);
+    background-size: 100px 82px;
 }
 
 header {
@@ -90,19 +100,108 @@ header {
 
 
 .ButtonCallHistory {
-    /*
-    background: #e7e7e7;
-    border: 0.2px solid transparent;
-    float: left;
-    font-size: auto;
-    font-weight: bold;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    line-height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    */
+    
     text-align: center;
-    width: 300px;
+    width: 330px;
     height: 25px; 
+    margin: 2px 2px 2px 2px;
+    font-family: monospace;
+
+    background-color: #ffffff;
+    border: none;
+    border: 2px solid #555555;
+    display: inline-block;
+    transition-duration: 0.4s;
+    /*padding: 5px 3px;*/
+
+}
+
+.ListHistory-Plus_obj {
+    position: relative;
+}
+
+.ButtonCallHistory:hover {
+    background-color: #555555;
+    color: white;
+}
+
+.ButtonCallHistory .ButtonCallHistory_InnerTags {
+    font-weight: bold;
+}
+
+
+.ButtonCallHistory_InnerBoxs {
+    display: none;
+    padding: 10px;
+}
+
+.ListHistory-Plus-Obj:hover .ButtonCallHistory_InnerBoxs {
+    background: #e7e7e7;
+    border: 2px solid #555555;
+    border-radius: 3px;
+    bottom: -60px;
+    color: black;
+    font-size: 1em;
+    font-family: monospace;
+    display: block;
+    left: 0;
+    line-height: 30px;
+    margin-left: 600px;
+    margin-bottom: 130px;
+    position: absolute;
+}
+
+.ListHistory-Plus-Obj:hover .ButtonCallHistory_InnerBoxs::before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: -5px;
+    width: 0; 
+	height: 0; 
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	
+	border-bottom: 5px solid transparent;
+}
+
+
+.Clear-Button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 5.5px;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.Clear-Button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.Clear-Button span:after {
+    content: '  \27f3';
+    position: absolute;
+    opacity: 0;
+    top: -5.5px;
+    bottom: 1.5px;
+    right: -25px;
+    transition: 0.5s;
+}
+
+.Clear-Button:hover span {
+    padding-right: 30px;
+}
+
+.Clear-Button:hover span::after {
+    opacity: 1;
+    right: 0;
 }
