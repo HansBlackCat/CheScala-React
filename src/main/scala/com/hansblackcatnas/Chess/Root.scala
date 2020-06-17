@@ -123,7 +123,7 @@ class Root {
     }
     val testGrid5 = {
         var tmpGrid = emptyGrid.clone()
-        tmpGrid("f8") = King.<#>>; tmpGrid("f5") = King.<<#>; tmpGrid("f7") = Pawn.<<#>
+        tmpGrid("f8") = King.<#>>; tmpGrid("f5") = King.<<#>; tmpGrid("f7") = Pawn.<<#>; tmpGrid("b2") = Bishop.<#>>
         tmpGrid
     }
 

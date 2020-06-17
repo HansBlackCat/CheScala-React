@@ -288,11 +288,22 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
             }
           }
           // estimate king checked position
+          val forKingRangeWExceptKingItself = {
+            val tmpCopy = _currentBoard.clone()
+            tmpCopy(i._1) = InfoNone
+            _rangeFinder(tmpCopy)._3
+          }
           for (l <- forKingRangeW) {
             for (m <- l._2) {
               if (kingPossible contains m) whenMoveCheck = m +: whenMoveCheck
             }
           }
+          for (l <- forKingRangeWExceptKingItself) {
+            for (m <- l._2) {
+              if (kingPossible contains m) whenMoveCheck = m +: whenMoveCheck
+            }
+          }
+          whenMoveCheck.distinct
           // ----------------------------------------------------------------------------
           // BK Castling
           // ----------------------------------------------------------------------------
@@ -394,11 +405,22 @@ class PieceRule(currentBoard: MMap[String, Info]) extends Root {
               case _ => {}
             }
           }
+          val forKingRangeBExceptKingItself = {
+            val tmpCopy = _currentBoard.clone()
+            tmpCopy(i._1) = InfoNone
+            _rangeFinder(tmpCopy)._2
+          }
           for (l <- forKingRangeB) {
             for (m <- l._2) {
               if (kingPossible contains m) whenMoveCheck = m +: whenMoveCheck
             }
           }
+          for (l <- forKingRangeBExceptKingItself) {
+            for (m <- l._2) {
+              if (kingPossible contains m) whenMoveCheck = m +: whenMoveCheck
+            }
+          }
+          whenMoveCheck.distinct
           // ----------------------------------------------------------------------------
           // WK Castling
           // ----------------------------------------------------------------------------

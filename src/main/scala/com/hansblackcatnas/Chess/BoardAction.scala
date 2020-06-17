@@ -255,9 +255,23 @@ class BoardAction extends Root with PGN with DeepCloneable[BoardAction] {
         val dontRef = currentBoard remove from
         currentBoard(from) = {
             if (isWhite) {
-                InfoWhite(Queen, false)
+                toward match {
+                    case "Q" => InfoWhite(Queen, false)
+                    case "R" => InfoWhite(Rook, false)
+                    case "B" => InfoWhite(Bishop, false)
+                    case "N" => InfoWhite(Knight, false)
+                    case "P" => InfoWhite(Pawn, false)
+                    case _ => throw new Exception("Wrong Promotion match")
+                }
             } else {
-                InfoBlack(Queen, false)
+                toward match {
+                    case "Q" => InfoBlack(Queen, false)
+                    case "R" => InfoBlack(Rook, false)
+                    case "B" => InfoBlack(Bishop, false)
+                    case "N" => InfoBlack(Knight, false)
+                    case "P" => InfoBlack(Pawn, false)
+                    case _ => throw new Exception("Wrong Promotion match")
+                }
             }
         }
 

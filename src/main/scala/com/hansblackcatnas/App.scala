@@ -15,6 +15,9 @@ import org.scalajs.dom.css
 import com.hansblackcat.Chess._
 import scala.collection.mutable.{Map => MMap, ListBuffer}
 
+
+// TODO! Check King Shade Range (CopyCurrent check in PieceRule)
+
 @JSImport("resources/ChessBoard.css", JSImport.Default)
 @js.native
 object ChessBoardCSS extends js.Object
@@ -29,7 +32,7 @@ object CheScalaLogo extends js.Object
 
 object ChessMain {
   var newBoard = new BoardAction
-  newBoard.start()
+  newBoard.start("test5")
   var isWhite = newBoard.boardisWhite
 
   // Board copy, isWhite
@@ -37,7 +40,7 @@ object ChessMain {
   // (from, to, isWhite)
   var simpleHistory = ListBuffer[(String, String, PGNPieceKind, Boolean)]()
   // For switching
-  var tempBoard: ListBuffer[(BoardAction, Boolean)] = ListBuffer()
+  var tempBoard: ListBuffer[(BoardAction, Boolean, ListBuffer[(BoardAction, Boolean)], ListBuffer[(String, String, PGNPieceKind, Boolean)])] = ListBuffer()
 
   private val initBoard = new BoardAction; initBoard.start()
 
@@ -63,6 +66,12 @@ object ChessMain {
     isWhite = historyBoard(i)._2
     historyBoard = historyBoard.slice(i + 1, historyBoard.length)
     simpleHistory = simpleHistory.slice(i + 1, simpleHistory.length)
+  }
+  def backtoTemp() = {
+    newBoard = tempBoard(0)._1
+    isWhite = tempBoard(0)._2
+    historyBoard = tempBoard(0)._3
+    simpleHistory = tempBoard(0)._4
   }
 
   def currentBoardShow() = newBoard.currentBoardShow()
@@ -121,15 +130,72 @@ object ChessMain {
     else if (booltmp) "Check"
     else if (!booltmp) {
       var tmp = 0
+      var kindisWhite = Array[PGNPieceKind]()
+      var kindNOTisWite = Array[PGNPieceKind]()
+      // For StaleMate
       for (l <- PieceRule(currentBoardShow(), isWhite)) {
         tmp = tmp + l._2.length
       }
-      if (tmp == 0) "StaleMate"
-      else ""
-    } else ""
+      // For Impos CheckMate
+      for (v <- currentBoardShow()) {
+        v._2 match {
+          case InfoBlack(kind, init) => 
+            if (isWhite) kindNOTisWite = kind +: kindNOTisWite 
+            else kindisWhite = kind +: kindisWhite
+          case InfoWhite(kind, init) => 
+            if (isWhite) kindisWhite = kind +: kindisWhite
+            else kindNOTisWite = kind +: kindNOTisWite
+          case _ => {}
+        }
+      }
+      // For same color Bishop check
+      lazy val sameColorBishopCheck = {
+        var tmpLocB = ""
+        var tmpLocW = ""
+        for (v <- currentBoardShow()) {
+          v._2 match {
+            case InfoBlack(Bishop, init) => 
+              tmpLocB = v._1
+            case InfoWhite(Bishop, init) => 
+              tmpLocW = v._1
+            case _ => {}
+          }
+        }
+        val i = numLocKeyPair._2(tmpLocW)
+        val j = numLocKeyPair._2(tmpLocB)
 
+        (((i / 8) % 2 + i) % 2) == (((j / 8) % 2 + j) % 2) 
+      } 
+
+      if (tmp == 0) "StaleMate"
+      else if (
+        // king versus king
+        (
+          kindisWhite.length == 1 && kindNOTisWite.length == 1 &&
+          kindisWhite.contains(King) && kindNOTisWite.contains(King)
+        ) ||
+        // king and bishop versus king
+        (
+          kindisWhite.length == 2 && kindNOTisWite.length == 1 &&
+          kindisWhite.contains(King) && kindisWhite.contains(Bishop) && kindNOTisWite.contains(King)
+        ) ||
+        // king and knight versus king
+        (
+          kindisWhite.length == 2 && kindNOTisWite.length == 1 &&
+          kindisWhite.contains(King) && kindisWhite.contains(Knight) && kindNOTisWite.contains(King)
+        ) ||
+        // king and bishop versus king and bishop with the bishops on the same color.
+        (
+          kindisWhite.length == 2 && kindNOTisWite.length == 2 &&
+          kindisWhite.contains(King) && kindisWhite.contains(Bishop) && kindNOTisWite.contains(King) && kindNOTisWite.contains(Bishop) &&
+          //  L same color
+          sameColorBishopCheck
+        )
+      ) "Impo"
+      else ""
+    }
+    else ""
   }
-  // TODO: Check, CheckMate, Stale, Draw, Promotion, Pawn Attack Range Management
 }
 
 @react object ChessSquare {
@@ -303,37 +369,54 @@ object ChessMain {
     ChessMain.act(fromLoc, toLoc)
     ChessMain.isWhite = !ChessMain.isWhite
 
-    ChessMain.tempBoard.prepend((ChessMain.newBoard, ChessMain.isWhite))
+    ChessMain.tempBoard.prepend((ChessMain.newBoard.deepClone, ChessMain.isWhite, ChessMain.historyBoard.clone(), ChessMain.simpleHistory.clone()))
     val tmp = Array.fill(64)(0)
     for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
 
-    // Promotion! Lovely
-    // TODO
+    // Promotion!
     val whitePromotionBlocks = (for (i <- 'a' to 'h') yield i +: "8").toArray
     val blackPromotionBlocks = (for (i <- 'a' to 'h') yield i +: "1").toArray
     for (wP <- whitePromotionBlocks) {
       if (ChessMain.newBoard.currentUniShow(wP) == "\u2659") {
-        ChessMain.promotion(wP, "a")
+        val promotionTo = dom.window.prompt("Promotion to?", "Queen")
+        promotionTo match {
+          case "Q" | "Queen" | "q" | "queen" => ChessMain.promotion(wP, "Q")
+          case "R" | "Rook" | "rook" | "r" => ChessMain.promotion(wP, "R")
+          case "B" | "b" | "Bishop" | "bishop" => ChessMain.promotion(wP, "B")
+          case "N" | "n" | "Knight" | "knight" => ChessMain.promotion(wP, "N")
+          case "P" | "p" | "Pawn" | "pawn" => ChessMain.promotion(wP, "P")
+          case _ => ChessMain.promotion(wP, "Q")
+        }
       }
     }
     for (bP <- blackPromotionBlocks) {
       if (ChessMain.newBoard.currentUniShow(bP) == "\u265F") {
-        ChessMain.promotion(bP, "a")
+        val promotionTo = dom.window.prompt("Promotion to?", "Queen")
+        promotionTo match {
+          case "Q" | "Queen" | "q" | "queen" => ChessMain.promotion(bP, "Q")
+          case "R" | "Rook" | "rook" | "r" => ChessMain.promotion(bP, "R")
+          case "B" | "b" | "Bishop" | "bishop" => ChessMain.promotion(bP, "B")
+          case "N" | "n" | "Knight" | "knight" => ChessMain.promotion(bP, "N")
+          case "P" | "p" | "Pawn" | "pawn" => ChessMain.promotion(bP, "P")
+          case _ => ChessMain.promotion(bP, "Q")
+        }
       }
     }
 
     // Check Match
     ChessMain.ischeck() match {
       case "Check"      => dom.window.alert("Check")
-      case "CheckMate"  => dom.window.alert("CheckMate"); ChessMain.purge()
-      case "StaleMate"  => dom.window.alert("StaleMate"); ChessMain.purge()
-      case "ThreeFold"  => dom.window.alert("ThreeFold"); ChessMain.purge()
-      case "Fifty-move" => dom.window.alert("Fifty-move"); ChessMain.purge()
+      case "CheckMate"  => dom.window.alert(s"CheckMate\n${if (!ChessMain.isWhite) "White" else "Black"} Win!"); ChessMain.purge(); this.setState(initialState)
+      case "StaleMate"  => dom.window.alert("StaleMate"); ChessMain.purge(); this.setState(initialState)
+      case "ThreeFold"  => dom.window.alert("ThreeFold"); ChessMain.purge(); this.setState(initialState)
+      case "Fifty-move" => dom.window.alert("Fifty-move"); ChessMain.purge(); this.setState(initialState)
+      case "Impo"       => dom.window.alert("Impossible to CheckMate"); ChessMain.purge(); this.setState(initialState)
       case _            => {}
     }
 
     State(tmp, objectBoardPuller(), historyCheckerPuller())
   }
+
 
   def callHistroy(i: Int) = {
     ChessMain.backtoPast(i)
@@ -343,6 +426,19 @@ object ChessMain {
     val tmp = Array.fill(64)(0)
     for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
     this.setState(State(tmp, objectBP, historyCheckerPuller()))
+  }
+  
+  def callTemp() = {
+    if (ChessMain.tempBoard.isEmpty) dom.window.alert("Nothing to Undo!")
+    else {
+      ChessMain.backtoTemp()
+
+      val objectBP = objectBoardPuller()
+
+      val tmp = Array.fill(64)(0)
+      for (k <- 0 to 63) if (ChessMain.isExistHere(k)) tmp(k) = 1 else 0
+      this.setState(State(tmp, objectBP, historyCheckerPuller()))
+    }
   }
 
   def kindMatcher(ipt: PGNPieceKind, isWhite: Boolean) = {
@@ -376,7 +472,7 @@ object ChessMain {
       for (j <- 0 until historyChecker.length) {
         val liBuild =
           div(className := "ListHistory-Plus-Obj")(
-            li(className := "ListHistory")(
+            li(className := "ListHistory", key:=s"${j}")(
               button(className := "ButtonCallHistory", onClick := { () =>
                 callHistroy(j)
               })(
@@ -424,11 +520,17 @@ object ChessMain {
             )
           )("Welcome to CheScala")
         ),
-        p(
+        p(className:="ActionButtons")(
           button(className := "Clear-Button", onClick := { () =>
-            ChessMain.purge; this.setState(initialState);
+            if (dom.window.confirm("Are you sure?")) { ChessMain.purge; this.setState(initialState); }
+            else {}
           })(
             span("Restart")
+          ),
+          button(className:="UndoButton", onClick:= {() =>
+            callTemp()
+          })(
+            span("\u238c")
           )
         ),
         p(className := "LeftHistory")(
@@ -575,12 +677,10 @@ object ChessMain {
   def render() = {
     div(className := "Front")(
       header(className := "FrontHeader")(
-        //img(src := CheScalaLogo.asInstanceOf[String], className:="logo", alt := "logo-chescala"),
-        a(href:="/", className:="Header-Icon")(),
+        //a(href:="/", className:="Header-Icon")(),
         h1(className := "HeaderTitle")(
-          "Welcome to CheScala"
+          span("Welcome to CheScala")
         ),
-        //h2(CheScalaLogo.asInstanceOf[String])
       ),
       p(className := "ChessBoard")(
         ChessBoard()

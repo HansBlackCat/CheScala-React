@@ -10,16 +10,6 @@
     font-family: 'Times New Roman', Times, serif;
 }
 
-.Header-Icon {
-    display: block;
-    text-indent: -9999px;
-    width: 95px;
-    height: 80px;
-    position: relative;
-    background: url(logochescala.svg);
-    background-size: 100px 82px;
-}
-
 header {
     font-size: larger;
     font-family: fantasy;
@@ -188,20 +178,36 @@ header {
 }
 
 .Clear-Button span:after {
-    content: '  \27f3';
+    content: '\27f3';
     position: absolute;
+    text-align: right;
     opacity: 0;
-    top: -5.5px;
+    top: -6.5px;
     bottom: 1.5px;
-    right: -25px;
+    right: -50px;
     transition: 0.5s;
 }
 
 .Clear-Button:hover span {
-    padding-right: 30px;
+    padding-right: 35px;
 }
 
 .Clear-Button:hover span::after {
     opacity: 1;
-    right: 0;
+    right: -2.5px;
+}
+
+.UndoButton {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #9f94e0;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 5.5px;
+    width: 60px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
 }

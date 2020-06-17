@@ -8,11 +8,25 @@
     height: 125px;
     padding: 20px;
     color: white;
+    background-image: url(logochescala.svg);
+    background-size: 175px 175px;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: FrontBackAni 3s ease-in 0s;
+}
+
+@keyframes FrontBackAni {
+    from {
+        background-position-y: bottom;
+    }
+    to {
+        background-position-y: center;
+    }
 }
 
 .HeaderTitle {
-    font-size: 1.5em;
-    animation: HeaderTitle-Animation 3s linear 1s;
+    font-size: 2.0em;
+    animation: HeaderTitle-Animation 3s ease-in 0s;
 }
 
 @keyframes HeaderTitle-Animation {
