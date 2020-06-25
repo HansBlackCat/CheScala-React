@@ -1,18 +1,1 @@
-[0m[[0m[0minfo[0m] [0m[0mFast optimizing /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/chescala-react-fastopt.js[0m
-[0m[[0m[0mdebug[0m] [0m[0mLinker: Compute reachability: 399826 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mLinker: Assemble LinkedClasses: 43623 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mLinker: Check IR: 366359 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mLinker: 865354 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mOptimizer: Batch mode: true[0m
-[0m[[0m[0mdebug[0m] [0m[0mOptimizer: Incremental part: 128816 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mOptimizer: Optimizing 5263 methods.[0m
-[0m[[0m[0mdebug[0m] [0m[0mOptimizer: Optimizer part: 887175 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mOptimizer: 1025956 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mRefiner: Compute reachability: 71236 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mRefiner: Assemble LinkedClasses: 4701 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mRefiner: 89696 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mEmitter: Generate classes: 599232 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mEmitter: Write trees: 243769 us[0m
-[0m[[0m[0mdebug[0m] [0m[0mEmitter: Class tree cache stats: reused: 623 -- invalidated: 675[0m
-[0m[[0m[0mdebug[0m] [0m[0mEmitter: Method tree cache stats: reused: 0 -- invalidated: 2923[0m
-[0m[[0m[0mdebug[0m] [0m[0mEmitter: 890731 us[0m
+[0m[[0m[0minfo[0m] [0m[0mStarting webpack-dev-server[0m
