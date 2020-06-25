@@ -1,0 +1,13 @@
+[0m[[0m[0mdebug[0m] [0m[0m[watch] [chescala-react / Compile / fastOptJS] Found inputs: /Users/hansblackcat/Documents/Git/chescala-react/*.{java,scala},/Users/hansblackcat/Documents/Git/chescala-react/src/main/java/**/*.{java,scala},/Users/hansblackcat/Documents/Git/chescala-react/src/main/resources/**/*,/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/**/*.{java,scala},/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala-2.13/**/*.{java,scala}[0m
+[0m[[0m[0minfo[0m] [0m[0m1. Monitoring source files for chescala-react/fastOptJS...[0m
+[0m[[0m[0minfo[0m] [0m[0m   Press <enter> to interrupt or '?' for more options.[0m
+[0m[[0m[0mdebug[0m] [0m[0mchescala-react / Compile / fastOptJS - Accepted event for /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0mReceived Update(/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala,FileAttributes(isDirectory = false, isOther = false,isRegularFile = true, isSymbolicLink = false),FileAttributes(isDirectory = false, isOther = false,isRegularFile = true, isSymbolicLink = false))[0m
+[0m[[0m[0mdebug[0m] [0m[0mReceived event for path /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0mReceived event for path /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0mCreating update event for modified /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala (previous stamp: Hash(ab68657ed401aac88ed548eea00c2da8c2aa7354), current stamp: Hash(935d08432537b9d39e06999a42eb38cb20f6033e))[0m
+[0m[[0m[0mdebug[0m] [0m[0mReceived file event actions: /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala -> Trigger. Returning: (Update(/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala, 2020-Jun-19 19:17:44.941 KT),Trigger)[0m
+[0m[[0m[0minfo[0m] [0m[0mBuild triggered by /Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala. Running 'fastOptJS'.[0m
+[0m[[0m[0mdebug[0m] [0m[0m[watch] [debug] Received file event Trigger for Update(/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/App.scala, 2020-Jun-19 19:17:44.941 KT).[0m
+[0m[[0m[0minfo[0m] [0m[0m2. Monitoring source files for chescala-react/fastOptJS...[0m
+[0m[[0m[0minfo[0m] [0m[0m   Press <enter> to interrupt or '?' for more options.[0m

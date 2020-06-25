@@ -1,0 +1,39 @@
+[0m[[0m[0minfo[0m] [0m[0mdefault:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT[0m
+[0m[[0m[0minfo[0m] [0m[0m  +-me.shadaj:slinky-hot_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | +-me.shadaj:slinky-core_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-lang:scala-compiler:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-net.java.dev.jna:jna:5.3.1[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-org.jline:jline:3.14.1[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | [0m
+[0m[[0m[0minfo[0m] [0m[0m  +-me.shadaj:slinky-web_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | +-me.shadaj:slinky-core_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-lang:scala-compiler:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-net.java.dev.jna:jna:5.3.1[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-org.jline:jline:3.14.1[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-org.scala-lang:scala-reflect:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | +-org.scala-js:scalajs-dom_sjs1_2.13:0.9.8[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | | [0m
+[0m[[0m[0minfo[0m] [0m[0m  | +-org.scala-js:scalajs-library_2.13:1.0.0 (evicted by: 1.0.1)[0m
+[0m[[0m[0minfo[0m] [0m[0m  | [0m
+[0m[[0m[0minfo[0m] [0m[0m  +-org.scala-js:scalajs-library_2.13:1.0.1[0m
+[0m[[0m[0minfo[0m] [0m[0m  +-org.scala-lang:scala-library:2.13.2[0m
+[0m[[0m[0minfo[0m] [0m[0m  [0m

@@ -1,0 +1,47 @@
+digraph "dependency-graph" {
+    graph[rankdir="LR"]
+    edge [
+        arrowtail="none"
+    ]
+    "default:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT"[label=<default<BR/><B>chescala-react_sjs1_2.13</B><BR/>0.1.0-SNAPSHOT> style=""]
+    "org.scala-lang:scala-compiler:2.13.2"[label=<org.scala-lang<BR/><B>scala-compiler</B><BR/>2.13.2> style=""]
+    "org.scala-lang:scala-library:2.13.2"[label=<org.scala-lang<BR/><B>scala-library</B><BR/>2.13.2> style=""]
+    "net.java.dev.jna:jna:5.3.1"[label=<net.java.dev.jna<BR/><B>jna</B><BR/>5.3.1> style=""]
+    "org.scala-js:scalajs-dom_sjs1_2.13:0.9.8"[label=<org.scala-js<BR/><B>scalajs-dom_sjs1_2.13</B><BR/>0.9.8> style=""]
+    "org.scala-js:scalajs-library_2.13:1.0.1"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.1> style=""]
+    "org.scala-js:scalajs-library_2.13:1.0.0"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.0> style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.0> style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.0> style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.0> style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0"[label=<org.scala-js<BR/><B>scalajs-library_2.13</B><BR/>1.0.0> style="stroke-dasharray: 5,5"]
+    "org.scala-lang:scala-reflect:2.13.2"[label=<org.scala-lang<BR/><B>scala-reflect</B><BR/>2.13.2> style=""]
+    "me.shadaj:slinky-hot_sjs1_2.13:0.6.5"[label=<me.shadaj<BR/><B>slinky-hot_sjs1_2.13</B><BR/>0.6.5> style=""]
+    "org.jline:jline:3.14.1"[label=<org.jline<BR/><B>jline</B><BR/>3.14.1> style=""]
+    "me.shadaj:slinky-web_sjs1_2.13:0.6.5"[label=<me.shadaj<BR/><B>slinky-web_sjs1_2.13</B><BR/>0.6.5> style=""]
+    "me.shadaj:slinky-core_sjs1_2.13:0.6.5"[label=<me.shadaj<BR/><B>slinky-core_sjs1_2.13</B><BR/>0.6.5> style=""]
+    "me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5"[label=<me.shadaj<BR/><B>slinky-readwrite_sjs1_2.13</B><BR/>0.6.5> style=""]
+    "me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5" -> "org.scala-lang:scala-compiler:2.13.2"
+    "default:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT" -> "org.scala-lang:scala-library:2.13.2"
+    "org.scala-lang:scala-compiler:2.13.2" -> "net.java.dev.jna:jna:5.3.1"
+    "me.shadaj:slinky-web_sjs1_2.13:0.6.5" -> "org.scala-js:scalajs-dom_sjs1_2.13:0.9.8"
+    "default:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT" -> "org.scala-js:scalajs-library_2.13:1.0.1"
+    "me.shadaj:slinky-core_sjs1_2.13:0.6.5" -> "org.scala-js:scalajs-library_2.13:1.0.0"
+    "me.shadaj:slinky-hot_sjs1_2.13:0.6.5" -> "org.scala-js:scalajs-library_2.13:1.0.0"
+    "me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5" -> "org.scala-js:scalajs-library_2.13:1.0.0"
+    "me.shadaj:slinky-web_sjs1_2.13:0.6.5" -> "org.scala-js:scalajs-library_2.13:1.0.0"
+    "org.scala-js:scalajs-dom_sjs1_2.13:0.9.8" -> "org.scala-js:scalajs-library_2.13:1.0.0"
+    "me.shadaj:slinky-core_sjs1_2.13:0.6.5" -> "org.scala-lang:scala-reflect:2.13.2"
+    "org.scala-lang:scala-compiler:2.13.2" -> "org.scala-lang:scala-reflect:2.13.2"
+    "me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5" -> "org.scala-lang:scala-reflect:2.13.2"
+    "default:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT" -> "me.shadaj:slinky-hot_sjs1_2.13:0.6.5"
+    "org.scala-lang:scala-compiler:2.13.2" -> "org.jline:jline:3.14.1"
+    "default:chescala-react_sjs1_2.13:0.1.0-SNAPSHOT" -> "me.shadaj:slinky-web_sjs1_2.13:0.6.5"
+    "me.shadaj:slinky-hot_sjs1_2.13:0.6.5" -> "me.shadaj:slinky-core_sjs1_2.13:0.6.5"
+    "me.shadaj:slinky-web_sjs1_2.13:0.6.5" -> "me.shadaj:slinky-core_sjs1_2.13:0.6.5"
+    "me.shadaj:slinky-core_sjs1_2.13:0.6.5" -> "me.shadaj:slinky-readwrite_sjs1_2.13:0.6.5"
+    "org.scala-js:scalajs-library_2.13:1.0.0" -> "org.scala-js:scalajs-library_2.13:1.0.1" [label="Evicted By" style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0" -> "org.scala-js:scalajs-library_2.13:1.0.1" [label="Evicted By" style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0" -> "org.scala-js:scalajs-library_2.13:1.0.1" [label="Evicted By" style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0" -> "org.scala-js:scalajs-library_2.13:1.0.1" [label="Evicted By" style="stroke-dasharray: 5,5"]
+    "org.scala-js:scalajs-library_2.13:1.0.0" -> "org.scala-js:scalajs-library_2.13:1.0.1" [label="Evicted By" style="stroke-dasharray: 5,5"]
+}

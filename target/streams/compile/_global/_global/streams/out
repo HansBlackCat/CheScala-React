@@ -1,0 +1,14 @@
+[0m[[0m[0minfo[0m] [0m[0mBuilding webpack library bundles for chescala-react-fastopt in /Users/hansblackcat/Documents/Git/chescala-react/target/streams/compile/_global/_global/streams/fastOptJS-webpack-libraries[0m
+[0m[[0m[0minfo[0m] [0m[0mWriting scalajs.webpack.config.js[0m
+[0m[[0m[0mdebug[0m] [0m[0mCommand: node /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/node_modules/webpack/bin/webpack --bail --profile --json --config /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/webpack-fastopt.config.js[0m
+[0m[[0m[0minfo[0m] [0m[0mVersion: 4.43.0[0m
+[0m[[0m[0minfo[0m] [0m[0mHash: 79299090d6d4da0e1c2c[0m
+[0m[[0m[0minfo[0m] [0m[0mTime: 1218ms[0m
+[0m[[0m[0minfo[0m] [0m[0mPath: /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/dist[0m
+[0m[[0m[0minfo[0m] [0m[0mBuilt at 2020-06-19T18:28:24.101576[0m
+[0m[[0m[0minfo[0m] [0m[0m                                 Asset      Size                                 Chunks[0m
+[0m[[0m[0minfo[0m] [0m[0m             chescala-react-fastopt.js   4749620   [emitted]   [chescala-react-fastopt][0m
+[0m[[0m[0minfo[0m] [0m[0m                           favicon.ico      3870   [emitted]                         [][0m
+[0m[[0m[0minfo[0m] [0m[0m                            index.html      1473   [emitted]                         [][0m
+[0m[[0m[0minfo[0m] [0m[0m                         manifest.json       317   [emitted]                         [][0m
+[0m[[0m[0minfo[0m] [0m[0mstatic/media/logochescala.d33a12e7.svg     75653   [emitted]                         [][0m

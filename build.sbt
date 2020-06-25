@@ -39,3 +39,8 @@ requireJsDomEnv in Test := true
 addCommandAlias("dev", ";fastOptJS::startWebpackDevServer;~fastOptJS")
 
 addCommandAlias("build", "fullOptJS::webpack")
+
+
+filterScalaLibrary := false // include scala library in output
+
+dependencyDotFile := file("dependencies.dot") //render dot file to `./dependencies.dot`

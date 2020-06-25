@@ -32,7 +32,7 @@ object CheScalaLogo extends js.Object
 
 object ChessMain {
   var newBoard = new BoardAction
-  newBoard.start("test5")
+  newBoard.start()
   var isWhite = newBoard.boardisWhite
 
   // Board copy, isWhite

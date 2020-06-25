@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/hansblackcat/Documents/Git/chescala-react/src/main/scala/com/hansblackcatnas/Chess/Root.scala:126:106: not found: value Bi[0m
+[0m[[0m[31merror[0m] [0m[0m        tmpGrid("f8") = King.<#>>; tmpGrid("f5") = King.<<#>; tmpGrid("f7") = Pawn.<<#>; tmpGrid("b2") = Bi.<#>>[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
