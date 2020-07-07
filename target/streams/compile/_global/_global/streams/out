@@ -1,14 +1,26 @@
-[0m[[0m[0minfo[0m] [0m[0mBuilding webpack library bundles for chescala-react-fastopt in /Users/hansblackcat/Documents/Git/chescala-react/target/streams/compile/_global/_global/streams/fastOptJS-webpack-libraries[0m
 [0m[[0m[0minfo[0m] [0m[0mWriting scalajs.webpack.config.js[0m
-[0m[[0m[0mdebug[0m] [0m[0mCommand: node /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/node_modules/webpack/bin/webpack --bail --profile --json --config /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/webpack-fastopt.config.js[0m
+[0m[[0m[0minfo[0m] [0m[0mBundling the application with its NPM dependencies[0m
+[0m[[0m[0mdebug[0m] [0m[0mCommand: node /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/node_modules/webpack/bin/webpack --bail --profile --json --config /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/webpack-opt.config.js[0m
+[0m[[0m[33mwarn[0m] [0m[0masset size limit: The following asset(s) exceed the recommended size limit (244 KiB).[0m
+[0m[[0m[33mwarn[0m] [0m[0mThis can impact web performance.[0m
+[0m[[0m[33mwarn[0m] [0m[0mAssets: [0m
+[0m[[0m[33mwarn[0m] [0m[0m  chescala-react-opt.js (425 KiB)[0m
+[0m[[0m[33mwarn[0m] [0m[0mentrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.[0m
+[0m[[0m[33mwarn[0m] [0m[0mEntrypoints:[0m
+[0m[[0m[33mwarn[0m] [0m[0m  chescala-react-opt (425 KiB)[0m
+[0m[[0m[33mwarn[0m] [0m[0m      chescala-react-opt.js[0m
+[0m[[0m[33mwarn[0m] [0m[0mwebpack performance recommendations: [0m
+[0m[[0m[33mwarn[0m] [0m[0mYou can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.[0m
+[0m[[0m[33mwarn[0m] [0m[0mFor more info visit https://webpack.js.org/guides/code-splitting/[0m
 [0m[[0m[0minfo[0m] [0m[0mVersion: 4.43.0[0m
-[0m[[0m[0minfo[0m] [0m[0mHash: 79299090d6d4da0e1c2c[0m
-[0m[[0m[0minfo[0m] [0m[0mTime: 1218ms[0m
-[0m[[0m[0minfo[0m] [0m[0mPath: /Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/dist[0m
-[0m[[0m[0minfo[0m] [0m[0mBuilt at 2020-06-19T18:28:24.101576[0m
-[0m[[0m[0minfo[0m] [0m[0m                                 Asset      Size                                 Chunks[0m
-[0m[[0m[0minfo[0m] [0m[0m             chescala-react-fastopt.js   4749620   [emitted]   [chescala-react-fastopt][0m
-[0m[[0m[0minfo[0m] [0m[0m                           favicon.ico      3870   [emitted]                         [][0m
-[0m[[0m[0minfo[0m] [0m[0m                            index.html      1473   [emitted]                         [][0m
-[0m[[0m[0minfo[0m] [0m[0m                         manifest.json       317   [emitted]                         [][0m
-[0m[[0m[0minfo[0m] [0m[0mstatic/media/logochescala.d33a12e7.svg     75653   [emitted]                         [][0m
+[0m[[0m[0minfo[0m] [0m[0mHash: e87a83c485d036b993a5[0m
+[0m[[0m[0minfo[0m] [0m[0mTime: 6229ms[0m
+[0m[[0m[0minfo[0m] [0m[0mPath: /Users/hansblackcat/Documents/Git/chescala-react/build[0m
+[0m[[0m[0minfo[0m] [0m[0mBuilt at 2020-06-26T01:13:02.652297[0m
+[0m[[0m[0minfo[0m] [0m[0m                                 Asset      Size                             Chunks[0m
+[0m[[0m[0minfo[0m] [0m[0m                 chescala-react-opt.js    435146   [emitted]   [chescala-react-opt][0m
+[0m[[0m[0minfo[0m] [0m[0m             chescala-react-opt.js.map   1142215   [emitted]   [chescala-react-opt][0m
+[0m[[0m[0minfo[0m] [0m[0m                           favicon.ico      3870   [emitted]                     [][0m
+[0m[[0m[0minfo[0m] [0m[0m                            index.html       457   [emitted]                     [][0m
+[0m[[0m[0minfo[0m] [0m[0m                         manifest.json       317   [emitted]                     [][0m
+[0m[[0m[0minfo[0m] [0m[0mstatic/media/logochescala.d33a12e7.svg     75653   [emitted]                     [][0m

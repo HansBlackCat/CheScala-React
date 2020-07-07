@@ -1,14 +1,12 @@
 module.exports = {
   "entry": {
-    "chescala-react-fastopt": ["/Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/chescala-react-fastopt-entrypoint.js"]
+    "chescala-react-opt": ["/Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main/chescala-react-opt.js"]
   },
   "output": {
     "path": "/Users/hansblackcat/Documents/Git/chescala-react/target/scala-2.13/scalajs-bundler/main",
-    "filename": "[name]-library.js",
-    "library": "ScalaJSBundlerLibrary",
-    "libraryTarget": "var"
+    "filename": "[name]-bundle.js"
   },
-  "mode": "development",
+  "mode": "production",
   "devtool": "source-map",
   "module": {
     "rules": [{
